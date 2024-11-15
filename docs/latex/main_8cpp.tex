@@ -1,0 +1,524 @@
+\doxysection{src/main.cpp File Reference}
+\hypertarget{main_8cpp}{}\label{main_8cpp}\index{src/main.cpp@{src/main.cpp}}
+
+
+ESP32 Webserver med Web\+Socket, SPIFFS og touchsensor-\/integration.  
+
+
+{\ttfamily \#include $<$Arduino.\+h$>$}\newline
+{\ttfamily \#include $<$Wi\+Fi.\+h$>$}\newline
+{\ttfamily \#include $<$ESPAsync\+Web\+Server.\+h$>$}\newline
+{\ttfamily \#include $<$Async\+TCP.\+h$>$}\newline
+{\ttfamily \#include $<$SPIFFS.\+h$>$}\newline
+{\ttfamily \#include $<$Update.\+h$>$}\newline
+{\ttfamily \#include $<$DNSServer.\+h$>$}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Async\+Web\+Server \mbox{\hyperlink{main_8cpp_a85f30d66aa1231313c8553fd485b22b1}{server}} (80)
+\begin{DoxyCompactList}\small\item\em Webserver-\/objekt på port 80. \end{DoxyCompactList}\item 
+Async\+Web\+Socket \mbox{\hyperlink{main_8cpp_a12b97dd15b0118cb30b85286f7c4b3c9}{ws}} ("{}/ws"{})
+\begin{DoxyCompactList}\small\item\em Web\+Socket endepunkt på "{}/ws"{}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a2bd24b36ef8125b5b50e866ffdf9c805}{init\+SPIFFS}} ()
+\begin{DoxyCompactList}\small\item\em Initialiserer SPIFFS. \end{DoxyCompactList}\item 
+String \mbox{\hyperlink{main_8cpp_a62f397dc6088ac03f320312b0d95b5a7}{read\+File}} (fs\+::\+FS \&fs, const char \texorpdfstring{$\ast$}{*}path)
+\begin{DoxyCompactList}\small\item\em Læser indholdet af en fil fra SPIFFS. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_adfdfe491c3b951586aeba25a0b8ccf80}{write\+File}} (fs\+::\+FS \&fs, const char \texorpdfstring{$\ast$}{*}path, const char \texorpdfstring{$\ast$}{*}message)
+\begin{DoxyCompactList}\small\item\em Skriver data til en fil på SPIFFS. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_ab09a1af3eec16c78fa105bc374784fa0}{log\+Data}} (String data)
+\begin{DoxyCompactList}\small\item\em Logger data til en fil og sender over Web\+Socket. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_aa5fcdd752594eb06073bd9b10b0ae58e}{send\+Counter}} ()
+\begin{DoxyCompactList}\small\item\em Sender tællerværdien over Web\+Socket. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a2451ac6312a4ace8bd4094e912d461e4}{handle\+Touch}} ()
+\begin{DoxyCompactList}\small\item\em Håndterer berøringsinput med debouncing. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{main_8cpp_ae3cd6362ffeb905d21037483b851e723}{init\+Wi\+Fi}} ()
+\begin{DoxyCompactList}\small\item\em Initialiserer Wi-\/\+Fi-\/forbindelsen. \end{DoxyCompactList}\item 
+String \mbox{\hyperlink{main_8cpp_a0c021f9721c3b479757f8e1b40624b6c}{processor}} (const String \&var)
+\begin{DoxyCompactList}\small\item\em Returnerer dynamisk variabel til HTML-\/siderne. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_aeebd43a3a29938534cb7bf6035894b32}{on\+Web\+Socket\+Message}} (Async\+Web\+Socket\+Client \texorpdfstring{$\ast$}{*}client, String message)
+\begin{DoxyCompactList}\small\item\em Håndterer modtagne Web\+Socket-\/beskeder. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_a4fc01d736fe50cf5b977f755b675f11d}{setup}} ()
+\begin{DoxyCompactList}\small\item\em Setup-\/funktion til initialisering af systemet. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8cpp_afe461d27b9c48d5921c00d521181f12f}{loop}} ()
+\begin{DoxyCompactList}\small\item\em Hoved-\/løkken som kontrollerer touch, reset og Web\+Socket-\/klienter. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const int \mbox{\hyperlink{main_8cpp_a4447ea46d7cfa6ac5a7208f416e71cad}{reset\+Pin}} = 4
+\begin{DoxyCompactList}\small\item\em Pin til reset-\/knap. \end{DoxyCompactList}\item 
+unsigned long \mbox{\hyperlink{main_8cpp_abc1d7a2bbe67d2bb9dbba1c5dc183619}{button\+Press\+Time}} = 0
+\begin{DoxyCompactList}\small\item\em Tidsregistrering for knaptryk. \end{DoxyCompactList}\item 
+const unsigned long \mbox{\hyperlink{main_8cpp_a0673179b90ed6ec0e548bff4416bbf3d}{reset\+Delay}} = 10000
+\begin{DoxyCompactList}\small\item\em Forsinkelse til reset i ms. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8cpp_a454c4ab726de0051333b4a76033000cf}{PARAM\+\_\+\+INPUT\+\_\+1}} = "{}ssid"{}
+\begin{DoxyCompactList}\small\item\em Wi-\/\+Fi SSID. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8cpp_a9051a630d6ada86bd19c8b2a81931a2d}{PARAM\+\_\+\+INPUT\+\_\+2}} = "{}pass"{}
+\begin{DoxyCompactList}\small\item\em Wi-\/\+Fi password. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8cpp_a24784b86c62864e188063e8e26148d11}{PARAM\+\_\+\+INPUT\+\_\+3}} = "{}ip"{}
+\begin{DoxyCompactList}\small\item\em Statisk IP-\/adresse. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8cpp_aead3b22e22f932390dc3a71cd0562944}{PARAM\+\_\+\+INPUT\+\_\+4}} = "{}gateway"{}
+\begin{DoxyCompactList}\small\item\em Gateway-\/adresse. \end{DoxyCompactList}\item 
+String \mbox{\hyperlink{main_8cpp_a9223d0e377e234d679946b194a81dcf3}{ssid}}
+\begin{DoxyCompactList}\small\item\em Gemt Wi-\/\+Fi SSID. \end{DoxyCompactList}\item 
+String \mbox{\hyperlink{main_8cpp_a519725e0c97d7f502af54e1b185fbc09}{pass}}
+\begin{DoxyCompactList}\small\item\em Gemt Wi-\/\+Fi password. \end{DoxyCompactList}\item 
+String \mbox{\hyperlink{main_8cpp_ac48f6ccb8e79c93e8c1d512be13826dd}{ip}}
+\begin{DoxyCompactList}\small\item\em Gemt IP-\/adresse. \end{DoxyCompactList}\item 
+String \mbox{\hyperlink{main_8cpp_abd1d7f174a4ef4b35ae6bb1bd36258bd}{gateway}}
+\begin{DoxyCompactList}\small\item\em Gemt gateway-\/adresse. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8cpp_af994acd89c43bc66aeb3fa5affb4c3e2}{ssid\+Path}} = "{}/ssid.\+txt"{}
+\begin{DoxyCompactList}\small\item\em Filsti til SSID. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8cpp_ac6262da0f52f5aa8accf052bf0081104}{pass\+Path}} = "{}/pass.\+txt"{}
+\begin{DoxyCompactList}\small\item\em Filsti til password. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8cpp_a14f185ca928283b04850becc8a4ae72c}{ip\+Path}} = "{}/ip.\+txt"{}
+\begin{DoxyCompactList}\small\item\em Filsti til IP-\/adresse. \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8cpp_a78d0bd758ef93a5bb2a12320d8e4ea3b}{gateway\+Path}} = "{}/gateway.\+txt"{}
+\begin{DoxyCompactList}\small\item\em Filsti til gateway-\/adresse. \end{DoxyCompactList}\item 
+unsigned long \mbox{\hyperlink{main_8cpp_a86027ad9c9159f02624d136fb63364fe}{previous\+Millis}} = 0
+\begin{DoxyCompactList}\small\item\em Timer til Wi-\/\+Fi timeout. \end{DoxyCompactList}\item 
+const long \mbox{\hyperlink{main_8cpp_afab23e0ee85e56261dace1dba900e39e}{interval}} = 10000
+\begin{DoxyCompactList}\small\item\em Timeout-\/interval for Wi-\/\+Fi (ms) \end{DoxyCompactList}\item 
+const int \mbox{\hyperlink{main_8cpp_a2cd9f0d96c9cd0637798de3baa7aee60}{led\+Pin}} = 2
+\begin{DoxyCompactList}\small\item\em GPIO til LED. \end{DoxyCompactList}\item 
+String \mbox{\hyperlink{main_8cpp_ada1a17bdeecfdc91038d69400c513250}{led\+State}}
+\begin{DoxyCompactList}\small\item\em Status for LED. \end{DoxyCompactList}\item 
+const int \mbox{\hyperlink{main_8cpp_abc976065859b2ddc59d370ffd64e9132}{touch\+Pin}} = 15
+\begin{DoxyCompactList}\small\item\em GPIO til berøringssensor. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{main_8cpp_a617a47c70795bcff659815ad0efd2266}{counter}} = 0
+\begin{DoxyCompactList}\small\item\em Tæller for touch events. \end{DoxyCompactList}\item 
+unsigned long \mbox{\hyperlink{main_8cpp_ab64c2b353497d48b406ff62effe08b06}{last\+Touch\+Time}} = 0
+\begin{DoxyCompactList}\small\item\em Tidspunkt for sidste touch event. \end{DoxyCompactList}\item 
+const unsigned long \mbox{\hyperlink{main_8cpp_a5e5621d3a8a9f6d4f94218fecdaacba4}{debounce\+Time}} = 500
+\begin{DoxyCompactList}\small\item\em Debounce-\/tid (ms) \end{DoxyCompactList}\item 
+const char \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{main_8cpp_ac7abff48dd01ced256add4dd499a867f}{log\+File\+Path}} = "{}/log.\+txt"{}
+\begin{DoxyCompactList}\small\item\em Filsti til logfil. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+ESP32 Webserver med Web\+Socket, SPIFFS og touchsensor-\/integration. 
+
+Dette program implementerer en ESP32-\/baseret webserver med\+:
+\begin{DoxyItemize}
+\item Web\+Socket-\/kommunikation
+\item Berøringssensor til tælling af events
+\item SPIFFS til filhåndtering af Wi-\/\+Fi-\/konfiguration og logning
+\item Dynamisk konfiguration via et Access Point
+\item LED-\/kontrol og reset-\/knap med forsinkelse 
+\end{DoxyItemize}
+
+\doxysubsection{Function Documentation}
+\Hypertarget{main_8cpp_a2451ac6312a4ace8bd4094e912d461e4}\index{main.cpp@{main.cpp}!handleTouch@{handleTouch}}
+\index{handleTouch@{handleTouch}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{handleTouch()}{handleTouch()}}
+{\footnotesize\ttfamily \label{main_8cpp_a2451ac6312a4ace8bd4094e912d461e4} 
+void handle\+Touch (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Håndterer berøringsinput med debouncing. 
+
+\Hypertarget{main_8cpp_a2bd24b36ef8125b5b50e866ffdf9c805}\index{main.cpp@{main.cpp}!initSPIFFS@{initSPIFFS}}
+\index{initSPIFFS@{initSPIFFS}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{initSPIFFS()}{initSPIFFS()}}
+{\footnotesize\ttfamily \label{main_8cpp_a2bd24b36ef8125b5b50e866ffdf9c805} 
+void init\+SPIFFS (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Initialiserer SPIFFS. 
+
+\Hypertarget{main_8cpp_ae3cd6362ffeb905d21037483b851e723}\index{main.cpp@{main.cpp}!initWiFi@{initWiFi}}
+\index{initWiFi@{initWiFi}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{initWiFi()}{initWiFi()}}
+{\footnotesize\ttfamily \label{main_8cpp_ae3cd6362ffeb905d21037483b851e723} 
+bool init\+Wi\+Fi (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Initialiserer Wi-\/\+Fi-\/forbindelsen. 
+
+\begin{DoxyReturn}{Returns}
+True hvis forbindelse lykkes, ellers false. 
+\end{DoxyReturn}
+\Hypertarget{main_8cpp_ab09a1af3eec16c78fa105bc374784fa0}\index{main.cpp@{main.cpp}!logData@{logData}}
+\index{logData@{logData}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{logData()}{logData()}}
+{\footnotesize\ttfamily \label{main_8cpp_ab09a1af3eec16c78fa105bc374784fa0} 
+void log\+Data (\begin{DoxyParamCaption}\item[{String}]{data}{}\end{DoxyParamCaption})}
+
+
+
+Logger data til en fil og sender over Web\+Socket. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & Den data, der skal logges \\
+\hline
+\end{DoxyParams}
+\Hypertarget{main_8cpp_afe461d27b9c48d5921c00d521181f12f}\index{main.cpp@{main.cpp}!loop@{loop}}
+\index{loop@{loop}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{loop()}{loop()}}
+{\footnotesize\ttfamily \label{main_8cpp_afe461d27b9c48d5921c00d521181f12f} 
+void loop (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Hoved-\/løkken som kontrollerer touch, reset og Web\+Socket-\/klienter. 
+
+\Hypertarget{main_8cpp_aeebd43a3a29938534cb7bf6035894b32}\index{main.cpp@{main.cpp}!onWebSocketMessage@{onWebSocketMessage}}
+\index{onWebSocketMessage@{onWebSocketMessage}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{onWebSocketMessage()}{onWebSocketMessage()}}
+{\footnotesize\ttfamily \label{main_8cpp_aeebd43a3a29938534cb7bf6035894b32} 
+void on\+Web\+Socket\+Message (\begin{DoxyParamCaption}\item[{Async\+Web\+Socket\+Client \texorpdfstring{$\ast$}{*}}]{client}{, }\item[{String}]{message}{}\end{DoxyParamCaption})}
+
+
+
+Håndterer modtagne Web\+Socket-\/beskeder. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em client} & Web\+Socket klient \\
+\hline
+{\em message} & Beskeden fra klienten \\
+\hline
+\end{DoxyParams}
+\Hypertarget{main_8cpp_a0c021f9721c3b479757f8e1b40624b6c}\index{main.cpp@{main.cpp}!processor@{processor}}
+\index{processor@{processor}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{processor()}{processor()}}
+{\footnotesize\ttfamily \label{main_8cpp_a0c021f9721c3b479757f8e1b40624b6c} 
+String processor (\begin{DoxyParamCaption}\item[{const String \&}]{var}{}\end{DoxyParamCaption})}
+
+
+
+Returnerer dynamisk variabel til HTML-\/siderne. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em var} & Navnet på variablen \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Værdien af variablen som en streng 
+\end{DoxyReturn}
+\Hypertarget{main_8cpp_a62f397dc6088ac03f320312b0d95b5a7}\index{main.cpp@{main.cpp}!readFile@{readFile}}
+\index{readFile@{readFile}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{readFile()}{readFile()}}
+{\footnotesize\ttfamily \label{main_8cpp_a62f397dc6088ac03f320312b0d95b5a7} 
+String read\+File (\begin{DoxyParamCaption}\item[{fs\+::\+FS \&}]{fs}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{path}{}\end{DoxyParamCaption})}
+
+
+
+Læser indholdet af en fil fra SPIFFS. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fs} & Filesystem objektet (SPIFFS) \\
+\hline
+{\em path} & Stien til filen \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Indholdet af filen som en streng 
+\end{DoxyReturn}
+\Hypertarget{main_8cpp_aa5fcdd752594eb06073bd9b10b0ae58e}\index{main.cpp@{main.cpp}!sendCounter@{sendCounter}}
+\index{sendCounter@{sendCounter}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{sendCounter()}{sendCounter()}}
+{\footnotesize\ttfamily \label{main_8cpp_aa5fcdd752594eb06073bd9b10b0ae58e} 
+void send\+Counter (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Sender tællerværdien over Web\+Socket. 
+
+\Hypertarget{main_8cpp_a85f30d66aa1231313c8553fd485b22b1}\index{main.cpp@{main.cpp}!server@{server}}
+\index{server@{server}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{server()}{server()}}
+{\footnotesize\ttfamily \label{main_8cpp_a85f30d66aa1231313c8553fd485b22b1} 
+Async\+Web\+Server server (\begin{DoxyParamCaption}\item[{80}]{}{}\end{DoxyParamCaption})}
+
+
+
+Webserver-\/objekt på port 80. 
+
+\Hypertarget{main_8cpp_a4fc01d736fe50cf5b977f755b675f11d}\index{main.cpp@{main.cpp}!setup@{setup}}
+\index{setup@{setup}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{setup()}{setup()}}
+{\footnotesize\ttfamily \label{main_8cpp_a4fc01d736fe50cf5b977f755b675f11d} 
+void setup (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Setup-\/funktion til initialisering af systemet. 
+
+\Hypertarget{main_8cpp_adfdfe491c3b951586aeba25a0b8ccf80}\index{main.cpp@{main.cpp}!writeFile@{writeFile}}
+\index{writeFile@{writeFile}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{writeFile()}{writeFile()}}
+{\footnotesize\ttfamily \label{main_8cpp_adfdfe491c3b951586aeba25a0b8ccf80} 
+void write\+File (\begin{DoxyParamCaption}\item[{fs\+::\+FS \&}]{fs}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{path}{, }\item[{const char \texorpdfstring{$\ast$}{*}}]{message}{}\end{DoxyParamCaption})}
+
+
+
+Skriver data til en fil på SPIFFS. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fs} & Filesystem objektet \\
+\hline
+{\em path} & Stien til filen \\
+\hline
+{\em message} & Data, der skal skrives \\
+\hline
+\end{DoxyParams}
+\Hypertarget{main_8cpp_a12b97dd15b0118cb30b85286f7c4b3c9}\index{main.cpp@{main.cpp}!ws@{ws}}
+\index{ws@{ws}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{ws()}{ws()}}
+{\footnotesize\ttfamily \label{main_8cpp_a12b97dd15b0118cb30b85286f7c4b3c9} 
+Async\+Web\+Socket ws (\begin{DoxyParamCaption}\item[{"{}/ws"{}}]{}{}\end{DoxyParamCaption})}
+
+
+
+Web\+Socket endepunkt på "{}/ws"{}. 
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{main_8cpp_abc1d7a2bbe67d2bb9dbba1c5dc183619}\index{main.cpp@{main.cpp}!buttonPressTime@{buttonPressTime}}
+\index{buttonPressTime@{buttonPressTime}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{buttonPressTime}{buttonPressTime}}
+{\footnotesize\ttfamily \label{main_8cpp_abc1d7a2bbe67d2bb9dbba1c5dc183619} 
+unsigned long button\+Press\+Time = 0}
+
+
+
+Tidsregistrering for knaptryk. 
+
+\Hypertarget{main_8cpp_a617a47c70795bcff659815ad0efd2266}\index{main.cpp@{main.cpp}!counter@{counter}}
+\index{counter@{counter}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{counter}{counter}}
+{\footnotesize\ttfamily \label{main_8cpp_a617a47c70795bcff659815ad0efd2266} 
+int counter = 0}
+
+
+
+Tæller for touch events. 
+
+\Hypertarget{main_8cpp_a5e5621d3a8a9f6d4f94218fecdaacba4}\index{main.cpp@{main.cpp}!debounceTime@{debounceTime}}
+\index{debounceTime@{debounceTime}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{debounceTime}{debounceTime}}
+{\footnotesize\ttfamily \label{main_8cpp_a5e5621d3a8a9f6d4f94218fecdaacba4} 
+const unsigned long debounce\+Time = 500}
+
+
+
+Debounce-\/tid (ms) 
+
+\Hypertarget{main_8cpp_abd1d7f174a4ef4b35ae6bb1bd36258bd}\index{main.cpp@{main.cpp}!gateway@{gateway}}
+\index{gateway@{gateway}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{gateway}{gateway}}
+{\footnotesize\ttfamily \label{main_8cpp_abd1d7f174a4ef4b35ae6bb1bd36258bd} 
+String gateway}
+
+
+
+Gemt gateway-\/adresse. 
+
+\Hypertarget{main_8cpp_a78d0bd758ef93a5bb2a12320d8e4ea3b}\index{main.cpp@{main.cpp}!gatewayPath@{gatewayPath}}
+\index{gatewayPath@{gatewayPath}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{gatewayPath}{gatewayPath}}
+{\footnotesize\ttfamily \label{main_8cpp_a78d0bd758ef93a5bb2a12320d8e4ea3b} 
+const char\texorpdfstring{$\ast$}{*} gateway\+Path = "{}/gateway.\+txt"{}}
+
+
+
+Filsti til gateway-\/adresse. 
+
+\Hypertarget{main_8cpp_afab23e0ee85e56261dace1dba900e39e}\index{main.cpp@{main.cpp}!interval@{interval}}
+\index{interval@{interval}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{interval}{interval}}
+{\footnotesize\ttfamily \label{main_8cpp_afab23e0ee85e56261dace1dba900e39e} 
+const long interval = 10000}
+
+
+
+Timeout-\/interval for Wi-\/\+Fi (ms) 
+
+\Hypertarget{main_8cpp_ac48f6ccb8e79c93e8c1d512be13826dd}\index{main.cpp@{main.cpp}!ip@{ip}}
+\index{ip@{ip}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{ip}{ip}}
+{\footnotesize\ttfamily \label{main_8cpp_ac48f6ccb8e79c93e8c1d512be13826dd} 
+String ip}
+
+
+
+Gemt IP-\/adresse. 
+
+\Hypertarget{main_8cpp_a14f185ca928283b04850becc8a4ae72c}\index{main.cpp@{main.cpp}!ipPath@{ipPath}}
+\index{ipPath@{ipPath}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{ipPath}{ipPath}}
+{\footnotesize\ttfamily \label{main_8cpp_a14f185ca928283b04850becc8a4ae72c} 
+const char\texorpdfstring{$\ast$}{*} ip\+Path = "{}/ip.\+txt"{}}
+
+
+
+Filsti til IP-\/adresse. 
+
+\Hypertarget{main_8cpp_ab64c2b353497d48b406ff62effe08b06}\index{main.cpp@{main.cpp}!lastTouchTime@{lastTouchTime}}
+\index{lastTouchTime@{lastTouchTime}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{lastTouchTime}{lastTouchTime}}
+{\footnotesize\ttfamily \label{main_8cpp_ab64c2b353497d48b406ff62effe08b06} 
+unsigned long last\+Touch\+Time = 0}
+
+
+
+Tidspunkt for sidste touch event. 
+
+\Hypertarget{main_8cpp_a2cd9f0d96c9cd0637798de3baa7aee60}\index{main.cpp@{main.cpp}!ledPin@{ledPin}}
+\index{ledPin@{ledPin}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{ledPin}{ledPin}}
+{\footnotesize\ttfamily \label{main_8cpp_a2cd9f0d96c9cd0637798de3baa7aee60} 
+const int led\+Pin = 2}
+
+
+
+GPIO til LED. 
+
+\Hypertarget{main_8cpp_ada1a17bdeecfdc91038d69400c513250}\index{main.cpp@{main.cpp}!ledState@{ledState}}
+\index{ledState@{ledState}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{ledState}{ledState}}
+{\footnotesize\ttfamily \label{main_8cpp_ada1a17bdeecfdc91038d69400c513250} 
+String led\+State}
+
+
+
+Status for LED. 
+
+\Hypertarget{main_8cpp_ac7abff48dd01ced256add4dd499a867f}\index{main.cpp@{main.cpp}!logFilePath@{logFilePath}}
+\index{logFilePath@{logFilePath}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{logFilePath}{logFilePath}}
+{\footnotesize\ttfamily \label{main_8cpp_ac7abff48dd01ced256add4dd499a867f} 
+const char\texorpdfstring{$\ast$}{*} log\+File\+Path = "{}/log.\+txt"{}}
+
+
+
+Filsti til logfil. 
+
+\Hypertarget{main_8cpp_a454c4ab726de0051333b4a76033000cf}\index{main.cpp@{main.cpp}!PARAM\_INPUT\_1@{PARAM\_INPUT\_1}}
+\index{PARAM\_INPUT\_1@{PARAM\_INPUT\_1}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{PARAM\_INPUT\_1}{PARAM\_INPUT\_1}}
+{\footnotesize\ttfamily \label{main_8cpp_a454c4ab726de0051333b4a76033000cf} 
+const char\texorpdfstring{$\ast$}{*} PARAM\+\_\+\+INPUT\+\_\+1 = "{}ssid"{}}
+
+
+
+Wi-\/\+Fi SSID. 
+
+\Hypertarget{main_8cpp_a9051a630d6ada86bd19c8b2a81931a2d}\index{main.cpp@{main.cpp}!PARAM\_INPUT\_2@{PARAM\_INPUT\_2}}
+\index{PARAM\_INPUT\_2@{PARAM\_INPUT\_2}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{PARAM\_INPUT\_2}{PARAM\_INPUT\_2}}
+{\footnotesize\ttfamily \label{main_8cpp_a9051a630d6ada86bd19c8b2a81931a2d} 
+const char\texorpdfstring{$\ast$}{*} PARAM\+\_\+\+INPUT\+\_\+2 = "{}pass"{}}
+
+
+
+Wi-\/\+Fi password. 
+
+\Hypertarget{main_8cpp_a24784b86c62864e188063e8e26148d11}\index{main.cpp@{main.cpp}!PARAM\_INPUT\_3@{PARAM\_INPUT\_3}}
+\index{PARAM\_INPUT\_3@{PARAM\_INPUT\_3}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{PARAM\_INPUT\_3}{PARAM\_INPUT\_3}}
+{\footnotesize\ttfamily \label{main_8cpp_a24784b86c62864e188063e8e26148d11} 
+const char\texorpdfstring{$\ast$}{*} PARAM\+\_\+\+INPUT\+\_\+3 = "{}ip"{}}
+
+
+
+Statisk IP-\/adresse. 
+
+\Hypertarget{main_8cpp_aead3b22e22f932390dc3a71cd0562944}\index{main.cpp@{main.cpp}!PARAM\_INPUT\_4@{PARAM\_INPUT\_4}}
+\index{PARAM\_INPUT\_4@{PARAM\_INPUT\_4}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{PARAM\_INPUT\_4}{PARAM\_INPUT\_4}}
+{\footnotesize\ttfamily \label{main_8cpp_aead3b22e22f932390dc3a71cd0562944} 
+const char\texorpdfstring{$\ast$}{*} PARAM\+\_\+\+INPUT\+\_\+4 = "{}gateway"{}}
+
+
+
+Gateway-\/adresse. 
+
+\Hypertarget{main_8cpp_a519725e0c97d7f502af54e1b185fbc09}\index{main.cpp@{main.cpp}!pass@{pass}}
+\index{pass@{pass}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{pass}{pass}}
+{\footnotesize\ttfamily \label{main_8cpp_a519725e0c97d7f502af54e1b185fbc09} 
+String pass}
+
+
+
+Gemt Wi-\/\+Fi password. 
+
+\Hypertarget{main_8cpp_ac6262da0f52f5aa8accf052bf0081104}\index{main.cpp@{main.cpp}!passPath@{passPath}}
+\index{passPath@{passPath}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{passPath}{passPath}}
+{\footnotesize\ttfamily \label{main_8cpp_ac6262da0f52f5aa8accf052bf0081104} 
+const char\texorpdfstring{$\ast$}{*} pass\+Path = "{}/pass.\+txt"{}}
+
+
+
+Filsti til password. 
+
+\Hypertarget{main_8cpp_a86027ad9c9159f02624d136fb63364fe}\index{main.cpp@{main.cpp}!previousMillis@{previousMillis}}
+\index{previousMillis@{previousMillis}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{previousMillis}{previousMillis}}
+{\footnotesize\ttfamily \label{main_8cpp_a86027ad9c9159f02624d136fb63364fe} 
+unsigned long previous\+Millis = 0}
+
+
+
+Timer til Wi-\/\+Fi timeout. 
+
+\Hypertarget{main_8cpp_a0673179b90ed6ec0e548bff4416bbf3d}\index{main.cpp@{main.cpp}!resetDelay@{resetDelay}}
+\index{resetDelay@{resetDelay}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{resetDelay}{resetDelay}}
+{\footnotesize\ttfamily \label{main_8cpp_a0673179b90ed6ec0e548bff4416bbf3d} 
+const unsigned long reset\+Delay = 10000}
+
+
+
+Forsinkelse til reset i ms. 
+
+\Hypertarget{main_8cpp_a4447ea46d7cfa6ac5a7208f416e71cad}\index{main.cpp@{main.cpp}!resetPin@{resetPin}}
+\index{resetPin@{resetPin}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{resetPin}{resetPin}}
+{\footnotesize\ttfamily \label{main_8cpp_a4447ea46d7cfa6ac5a7208f416e71cad} 
+const int reset\+Pin = 4}
+
+
+
+Pin til reset-\/knap. 
+
+\Hypertarget{main_8cpp_a9223d0e377e234d679946b194a81dcf3}\index{main.cpp@{main.cpp}!ssid@{ssid}}
+\index{ssid@{ssid}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{ssid}{ssid}}
+{\footnotesize\ttfamily \label{main_8cpp_a9223d0e377e234d679946b194a81dcf3} 
+String ssid}
+
+
+
+Gemt Wi-\/\+Fi SSID. 
+
+\Hypertarget{main_8cpp_af994acd89c43bc66aeb3fa5affb4c3e2}\index{main.cpp@{main.cpp}!ssidPath@{ssidPath}}
+\index{ssidPath@{ssidPath}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{ssidPath}{ssidPath}}
+{\footnotesize\ttfamily \label{main_8cpp_af994acd89c43bc66aeb3fa5affb4c3e2} 
+const char\texorpdfstring{$\ast$}{*} ssid\+Path = "{}/ssid.\+txt"{}}
+
+
+
+Filsti til SSID. 
+
+\Hypertarget{main_8cpp_abc976065859b2ddc59d370ffd64e9132}\index{main.cpp@{main.cpp}!touchPin@{touchPin}}
+\index{touchPin@{touchPin}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{touchPin}{touchPin}}
+{\footnotesize\ttfamily \label{main_8cpp_abc976065859b2ddc59d370ffd64e9132} 
+const int touch\+Pin = 15}
+
+
+
+GPIO til berøringssensor. 
+

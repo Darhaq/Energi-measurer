@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESP WEB SERVER</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="topnav">
+    <h1>ESP WEB SERVER</h1>
+  </div>
+
+  <div class="content">
+    <div class="card-grid">
+      <!-- Card for GPIO 2 control -->
+      <div class="card">
+        <p class="card-title"><i class="fas fa-lightbulb"></i> GPIO 2</p>
+        <p>
+          <a href="on"><button class="button-on">ON</button></a>
+          <a href="off"><button class="button-off">OFF</button></a>
+        </p>
+        <p class="state">State: %STATE%</p>
+      </div>
+
+      <!-- Card for counter data -->
+      <div class="card">
+        <p class="card-title"><i class="fas fa-signal"></i> Tæller Data</p>
+        <p id="counterData">Tæller: 0</p>
+      </div>
+
+      <!-- Card for energy graph -->
+      <div class="card">
+        <p class="card-title"><i class="fas fa-chart-line"></i> Energy Graph</p>
+        <div id="chartContainer">
+          <canvas id="energyChart" width="400" height="200"></canvas>
+        </div>
+        <p id="energyValue">Energy: 0 Wh</p>
+      </div>
+
+      <!-- Service Mode Card -->
+      <div class="card">
+        <p class="card-title"><i class="fas fa-tools"></i> Service Mode</p>
+        <p>
+          <button onclick="openServiceMode()">Åbn Service Mode</button>
+        </p>
+      </div>
+
+      <!-- Service Mode Dialog -->
+      <div id="serviceMode" style="display:none;">
+        <h2>Service Mode</h2>
+        <p>Her kan du slette gemte data og konfiguration.</p>
+        <button onclick="clearMeasurements()">Slet Måleværdier</button>
+        <button onclick="clearConfiguration()">Slet Konfiguration</button>
+        <button onclick="closeServiceMode()">Luk</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript code for WebSocket, Service Mode and Chart.js -->
+  <script>
+    // WebSocket setup
+    let socket = new WebSocket('ws://' + location.hostname + '/ws');
+    socket.onmessage = function(event) {
+      let message = event.data;
+      if (message.startsWith("counter:")) {
+        let counterValue = message.split(":")[1];
+        document.getElementById("counterData").innerText = "Tæller: " + counterValue;
+      } else {
+        let energy = parseFloat(message);
+        document.getElementById("energyValue").innerText = "Energy: " + energy + " Wh";
+        updateChart(energy);
+      }
+    };
+
+    function openServiceMode() {
+      document.getElementById("serviceMode").style.display = "block";
+    }
+
+    function closeServiceMode() {
+      document.getElementById("serviceMode").style.display = "none";
+    }
+
+    function clearMeasurements() {
+      if (confirm("Er du sikker på, at du vil slette alle måleværdier?")) {
+        socket.send("clear_measurements");
+      }
+    }
+
+    function clearConfiguration() {
+      if (confirm("Er du sikker på, at du vil slette konfigurationen?")) {
+        socket.send("clear_configuration");
+      }
+    }
+
+    // Chart.js setup for Energy graph
+    let ctx = document.getElementById('energyChart').getContext('2d');
+    let chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: Array.from({ length: 10 }, (_, i) => i + 1),
+        datasets: [{
+          label: 'Energy (Wh)',
+          data: [],
+          borderColor: 'rgba(75, 192, 192, 1)',
+          fill: false
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    function updateChart(energy) {
+      let chartData = chart.data.datasets[0].data;
+      chartData.push(energy);
+      if (chartData.length > 10) {
+        chartData.shift();
+      }
+      chart.update();
+    }
+  </script>
+
+</body>
+</html>
